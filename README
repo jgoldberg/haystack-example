@@ -1,3 +1,5 @@
 virtualenv --no-site-packages env
-env/bin/easy_install django
-env/bin/pip install django-haystack
+source env/bin/activate
+easy_install django
+pip install django-haystack
+pip install pysolr
