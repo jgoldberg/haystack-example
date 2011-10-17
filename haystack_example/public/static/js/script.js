@@ -1,4 +1,4 @@
-var TweetFeed = {
+var HE = {
  module: function() {
     var modules = {};
 
@@ -7,33 +7,80 @@ var TweetFeed = {
         return modules[name];
       }
 
-      return modules[name] = { Views: {} };
+      return modules[name] = { Views: {}, models: {} };
     };
   }()
 };
 
-(function(ViewUser) {
+(function(TweetFeed) {
 
-  var AppRouter = Backbone.Router.extend({
+  var TweetFeedRouter = Backbone.Router.extend({
       routes: {
         "user/:username":        "user",
-        "*actions":         "defaultRoute"
+        "*actions":              "home"
       },
 
       user: function(username) {
-          console.log(username);
-          $('#main').html(username);
+          TweetFeed.models.user = new UserModel({username: username});
+          TweetFeed.userView = new UserView({model:TweetFeed.models.user});
+          TweetFeed.models.user.fetch();
+
+          $('#main').append(TweetFeed.userView.el);
       },
 
-      defaultRoute: function () {
-          console.log("test");
-          $('#main').html('home');
+      home: function () {
+          this.navigate("user/jbieber", true);
       }
   });
 
-    var app_router = new AppRouter;
-})(TweetFeed.module("ViewUser"));
+  TweetFeed.router = new TweetFeedRouter;
+
+  var UserModel = Backbone.Model.extend({
+    defaults: {},
+
+    url : function () {
+        return '/ajax/user/' + this.get('username');
+    }
+  });
+
+  var UserView = Backbone.View.extend({
+
+    el : $('#main-content'),
+
+    events: {
+      //"click .icon":          "open",
+      //"click .button.edit":   "openEditDialog",
+      //"click .button.delete": "destroy"
+    },
+
+    initialize: function () {
+        this.model.bind('change', this.render, this);
+    },
+
+    render: function() {
+        json = this.model.toJSON();
+
+        $(this.el).append($('#template-page-user').tmpl());
+
+        for (var i=0; i<json.tweets.length; i++) {
+            var tweet = json.tweets[i];
+            
+            var data = {
+                message: tweet.msg,
+                options: tweet.created_by
+            }
+            
+            $(this.el).find('.stream').append($('#template-item-tweet').tmpl(data));
+        }
+
+        //return this;
+    }
+
+  });
+
+})(HE.module("TweetFeed"));
 
 $(document).ready( function () {
    Backbone.history.start({pushState: true});
+   TweetFeed = HE.module("TweetFeed");
 });
