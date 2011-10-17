@@ -17,14 +17,18 @@ var HE = {
   var TweetFeedRouter = Backbone.Router.extend({
       routes: {
         "user/:username":        "user",
+        "search/:query":         "search",
         "*actions":              "home"
+      },
+
+      search: function(query) {
+        $('#main').html(query);
       },
 
       user: function(username) {
           TweetFeed.models.user = new UserModel({username: username});
           TweetFeed.userView = new UserView({model:TweetFeed.models.user});
           TweetFeed.models.user.fetch();
-
           $('#main').append(TweetFeed.userView.el);
       },
 
@@ -47,10 +51,11 @@ var HE = {
 
     el : $('#main-content'),
 
+    _search_input : 'input[name="q"]',
+    _search_button : 'button',
+
     events: {
-      //"click .icon":          "open",
-      //"click .button.edit":   "openEditDialog",
-      //"click .button.delete": "destroy"
+      'onSearch': "search"
     },
 
     initialize: function () {
@@ -70,10 +75,28 @@ var HE = {
                 options: tweet.created_by
             }
             
-            $(this.el).find('.stream').append($('#template-item-tweet').tmpl(data));
+            this.find('.stream').append($('#template-item-tweet').tmpl(data));
         }
 
-        //return this;
+        // Custom Events
+        var self = this;
+
+        this.find(this._search_input).keydown(function (e) {
+            if (e.keyCode == 13) {
+                $(self.el).trigger('onSearch');
+            }
+        });
+
+        this.find(this._search_button).click(function () {
+            $(self.el).trigger('onSearch');
+        });
+
+        return this;
+    },
+
+    search: function() {
+        var route = "search/" + this.find(this._search_input).val();
+        TweetFeed.router.navigate(route, true);
     }
 
   });

@@ -8,4 +8,5 @@ urlpatterns = patterns('public.ajax',
 urlpatterns += patterns('public.views',
     url(r'^$', direct_to_template, {'template': 'public/index.html'}),
     url(r'^user/(?P<slug>.+)$', direct_to_template, {'template': 'public/index.html'}),
+    url(r'^search/(?P<query>.+)$', direct_to_template, {'template': 'public/index.html'}),
 )
