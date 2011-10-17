@@ -22,13 +22,19 @@ var HE = {
       },
 
       search: function(query) {
-        $('#main').html(query);
+          //TweetFeed.models.user = new UserModel({username: username});
+          //TweetFeed.userView = new UserView({model:TweetFeed.models.user});
+          //TweetFeed.models.user.fetch();
+          $('#main').contents().detach();
+          $('#main').html(query);//l;.append(TweetFeed.userView.el);
       },
 
       user: function(username) {
           TweetFeed.models.user = new UserModel({username: username});
           TweetFeed.userView = new UserView({model:TweetFeed.models.user});
           TweetFeed.models.user.fetch();
+
+          $('#main').contents().detach();
           $('#main').append(TweetFeed.userView.el);
       },
 
@@ -63,31 +69,30 @@ var HE = {
     },
 
     render: function() {
-        json = this.model.toJSON();
+        $(this.el).empty();
 
         $(this.el).append($('#template-page-user').tmpl());
 
-        for (var i=0; i<json.tweets.length; i++) {
-            var tweet = json.tweets[i];
-            
-            var data = {
+        var tweets = this.model.get('tweets');
+        for (var i=0; i<tweets.length; i++) {
+            var tweet = tweets[i];
+
+            this.$('.stream').append($('#template-item-tweet').tmpl({
                 message: tweet.msg,
                 options: tweet.created_by
-            }
-            
-            this.find('.stream').append($('#template-item-tweet').tmpl(data));
+            }));
         }
 
         // Custom Events
         var self = this;
 
-        this.find(this._search_input).keydown(function (e) {
+        this.$(this._search_input).keydown(function (e) {
             if (e.keyCode == 13) {
                 $(self.el).trigger('onSearch');
             }
         });
 
-        this.find(this._search_button).click(function () {
+        this.$(this._search_button).click(function () {
             $(self.el).trigger('onSearch');
         });
 
@@ -95,7 +100,7 @@ var HE = {
     },
 
     search: function() {
-        var route = "search/" + this.find(this._search_input).val();
+        var route = "search/" + this.$(this._search_input).val();
         TweetFeed.router.navigate(route, true);
     }
 
