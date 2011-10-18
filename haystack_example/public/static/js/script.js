@@ -22,11 +22,11 @@ var HE = {
       },
 
       search: function(query) {
-          //TweetFeed.models.user = new UserModel({username: username});
-          //TweetFeed.userView = new UserView({model:TweetFeed.models.user});
-          //TweetFeed.models.user.fetch();
+          TweetFeed.models.search = new SearchModel({query: query});
+          TweetFeed.searchView = new SearchView({model:TweetFeed.models.search});
+          TweetFeed.models.search.fetch();
           $('#main').contents().detach();
-          $('#main').html(query);//l;.append(TweetFeed.userView.el);
+          $('#main').append(TweetFeed.searchView.el);
       },
 
       user: function(username) {
@@ -53,9 +53,70 @@ var HE = {
     }
   });
 
+  var SearchModel = Backbone.Model.extend({
+    defaults: {},
+
+    url : function () {
+        return '/ajax/search/' + this.get('query');
+    }
+  });
+
+  var SearchView = Backbone.View.extend({
+
+    id : 'search-view-page',
+
+    _search_input : 'input[name="q"]',
+    _search_button : 'button',
+
+    events: {
+      'onSearch': "search"
+    },
+
+    initialize: function () {
+        this.model.bind('change', this.render, this);
+    },
+
+    render: function() {
+        $(this.el).empty();
+
+        $(this.el).append($('#template-page-search').tmpl());
+
+        var tweets = this.model.get('tweets');
+        for (var i=0; i<tweets.length; i++) {
+            var tweet = tweets[i];
+
+            this.$('.stream').append($('#template-item-tweet').tmpl({
+                message: tweet.msg,
+                options: tweet.created_by
+            }));
+        }
+
+        // Custom Events
+        var self = this;
+
+        this.$(this._search_input).keydown(function (e) {
+            if (e.keyCode == 13) {
+                $(self.el).trigger('onSearch');
+            }
+        });
+
+        this.$(this._search_button).click(function () {
+            $(self.el).trigger('onSearch');
+        });
+
+        return this;
+    },
+
+    search: function() {
+        var route = "search/" + this.$(this._search_input).val();
+        TweetFeed.router.navigate(route, true);
+    }
+
+  });
+
   var UserView = Backbone.View.extend({
 
-    el : $('#main-content'),
+    id : 'user-view-page',
 
     _search_input : 'input[name="q"]',
     _search_button : 'button',
