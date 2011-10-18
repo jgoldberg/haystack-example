@@ -35,23 +35,17 @@
     </footer>
   </div> <!--! end of #container -->
 
-  <script id="template-page-user" type="text/x-jquery-tmpl">
+  <script id="template-header" type="text/x-jquery-tmpl">
     <div class="search">
         <input type="text" name="q">
         <button>Search</button>
-    </div>
-    <div class="stream">
     </div>
   </script>
 
-   <script id="template-page-search" type="text/x-jquery-tmpl">
-    <div class="search">
-        <input type="text" name="q">
-        <button>Search</button>
-    </div>
+ <script id="template-stream-page" type="text/x-jquery-tmpl">
     <div class="stream">
     </div>
-  </script>
+ </script>
 
   <script id="template-item-tweet" type="text/x-jquery-tmpl">
     <div class="tweet">
@@ -69,7 +63,7 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/libs/jquery-1.6.2.min.js"><\/script>')</script>
-  <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+  <script src="{{ STATIC_URL }}js/libs/jquery.tmpl.js"></script>
   <script src="{{ STATIC_URL }}js/libs/underscore.js"></script>
   <script src="{{ STATIC_URL }}js/libs/json2.js"></script>
   <script src="{{ STATIC_URL }}js/libs/backbone.js"></script>

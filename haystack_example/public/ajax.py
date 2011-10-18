@@ -14,8 +14,11 @@ def ajax_get_user(request, username):
     return HttpResponse(json.dumps(profile.to_dict()))
 
 def ajax_search(request, query):
-    results = SearchQuerySet().filter(text=query).order_by('-created_date')[:5]
+    if query == "":
+        results = SearchQuerySet().all().order_by('-created_date')[:5]
+    else:
+        results = SearchQuerySet().filter(text=query).order_by('-created_date')[:5]
 
     tweets = map(lambda _pk : Tweet.objects.get(pk=_pk).to_dict(), [tweet.pk for tweet in results])
 
-    return HttpResponse(json.dumps({'tweets' : tweets }))
+    return HttpResponse(json.dumps({'query': query, 'tweets' : tweets }))
