@@ -46,24 +46,25 @@ var HE = {
         "*actions":              "home"
       },
 
+      render_view: function(view_name, clazz, data) {
+          data = data || {};
+          if (!TF_Public.views[view_name]) TF_Public.views[view_name] = new clazz(data);
+          TF_Public.currentView = TF_Public.views[view_name];
+          $('#main').empty().append(TF_Public.currentView.el);
+      },
+
       search: function(query) {
           var model = TF_Core.models.search.set({'query': query});
-
-          TF_Public.views.searchView = new StreamView({model: model});
-
           model.fetch();
-          
-          $('#main').empty().append(TF_Public.views.searchView.el);
+
+          this.render_view('searchView', StreamView, {model: model});
       },
 
       user: function(username) {
           var model = TF_Core.models.user.set({'username': username});
-
-          TF_Public.views.userView = new StreamView({model: model});
-
           model.fetch();
 
-          $('#main').empty().append(TF_Public.views.userView.el);
+          this.render_view('userView', StreamView, {model: model});
       },
 
       home: function () {
@@ -82,7 +83,9 @@ var HE = {
       'onSearch': "search"
     },
 
-    initialize: function () {},
+    initialize: function () {
+        this.render();
+    },
 
     render: function() {
         $(this.el).empty();
@@ -123,6 +126,8 @@ var HE = {
     },
 
     render: function() {
+        console.log('X');
+
         $(this.el).empty();
 
         $(this.el).append($('#template-stream-page').tmpl());
@@ -144,7 +149,6 @@ var HE = {
 
   TF_Public.router = new TF_Router;
   TF_Public.views.layoutView = new LayoutView();
-  TF_Public.views.layoutView.render();
 
 })(HE.module("TF_Public"));
 
