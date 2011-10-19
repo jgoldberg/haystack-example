@@ -18,7 +18,7 @@ var HE = {
     defaults: {},
 
     url : function () {
-        return '/ajax/user/' + this.get('username');
+        return '/ajax/user/' + encodeURIComponent(this.get('username'));
     }
   });
 
@@ -26,7 +26,7 @@ var HE = {
     defaults: {},
 
     url : function () {
-        return '/ajax/search/' + this.get('query');
+        return '/ajax/search/' + encodeURIComponent(this.get('query'));
     }
   });
 
@@ -106,7 +106,7 @@ var HE = {
     },
 
     search: function() {
-        var route = "search/" + this.$(this._search_input).val();
+        var route = "search/" + encodeURIComponent(this.$(this._search_input).val());
         TF_Public.router.navigate(route, true);
     }
 
