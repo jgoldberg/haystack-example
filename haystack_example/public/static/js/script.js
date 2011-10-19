@@ -42,25 +42,35 @@ var HE = {
         "*actions":              "home"
       },
 
-      render_view: function(view_name, clazz, data) {
-          data = data || {};
-          if (!TF_Public.views[view_name]) TF_Public.views[view_name] = new clazz(data);
+      render_view: function(view_name, callback) {
+          if (!TF_Public.views[view_name]) {
+              console.log(view_name + " view not defined");
+              return;
+          }
+          
           if (TF_Public.currentView !== TF_Public.views[view_name]) {
               TF_Public.currentView = TF_Public.views[view_name];
               $('#main').empty().append(TF_Public.currentView.el);
           }
+          if (!TF_Public.currentView.model) {
+              callback.call();
+          } else {
+              callback.call(this, TF_Public.currentView.model);
+          }
       },
 
       search: function(query) {
-          var model = TF_Core.models.search.set({'query': query}, {silent: true});
-          model.fetch()
-          this.render_view('searchView', StreamView, {model: model});
+          this.render_view('searchView', function (model) {
+              model.set({'query': query}, {silent: true});
+              model.fetch();
+          });
       },
 
       user: function(username) {
-          var model = TF_Core.models.user.set({'username': username}, {silent: true});
-          model.fetch()
-          this.render_view('userView', StreamView, {model: model});
+          this.render_view('userView', function (model) {
+              model.set({'username': username}, {silent: true});
+              model.fetch();
+          });
       },
 
       home: function () {
@@ -143,6 +153,8 @@ var HE = {
 
   TF_Public.router = new TF_Router;
   TF_Public.views.layoutView = new LayoutView();
+  TF_Public.views.searchView = new StreamView({model: TF_Core.models.search});
+  TF_Public.views.userView = new StreamView({model: TF_Core.models.user});
 
 })(HE.module("TF_Public"));
 
