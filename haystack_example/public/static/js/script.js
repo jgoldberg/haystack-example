@@ -53,7 +53,7 @@ var HE = {
               $('#main').empty().append(TF_Public.currentView.el);
           }
           if (!TF_Public.currentView.model) {
-              callback.call();
+              callback.call(this);
           } else {
               callback.call(this, TF_Public.currentView.model);
           }
