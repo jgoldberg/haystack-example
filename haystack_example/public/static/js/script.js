@@ -16,18 +16,14 @@ var HE = {
 
   var UserModel = Backbone.Model.extend({
     defaults: {},
-
-    url : function () {
-        return '/ajax/user/' + encodeURIComponent(this.get('username'));
-    }
+    idAttribute: 'username',
+    urlRoot : '/ajax/user/'
   });
 
   var SearchModel = Backbone.Model.extend({
     defaults: {},
-
-    url : function () {
-        return '/ajax/search/' + encodeURIComponent(this.get('query'));
-    }
+    idAttribute: 'query',
+    urlRoot : '/ajax/search/'
   });
 
   TF_Core.models.user = new UserModel();
@@ -49,21 +45,21 @@ var HE = {
       render_view: function(view_name, clazz, data) {
           data = data || {};
           if (!TF_Public.views[view_name]) TF_Public.views[view_name] = new clazz(data);
-          TF_Public.currentView = TF_Public.views[view_name];
-          $('#main').empty().append(TF_Public.currentView.el);
+          if (TF_Public.currentView !== TF_Public.views[view_name]) {
+              TF_Public.currentView = TF_Public.views[view_name];
+              $('#main').empty().append(TF_Public.currentView.el);
+          }
       },
 
       search: function(query) {
-          var model = TF_Core.models.search.set({'query': query});
-          model.fetch();
-
+          var model = TF_Core.models.search.set({'query': query}, {silent: true});
+          model.fetch()
           this.render_view('searchView', StreamView, {model: model});
       },
 
       user: function(username) {
-          var model = TF_Core.models.user.set({'username': username});
-          model.fetch();
-
+          var model = TF_Core.models.user.set({'username': username}, {silent: true});
+          model.fetch()
           this.render_view('userView', StreamView, {model: model});
       },
 
@@ -126,8 +122,6 @@ var HE = {
     },
 
     render: function() {
-        console.log('X');
-
         $(this.el).empty();
 
         $(this.el).append($('#template-stream-page').tmpl());
