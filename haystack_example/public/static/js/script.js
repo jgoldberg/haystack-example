@@ -1,3 +1,7 @@
+/////////////////////////////////////////////////////////////////////////////
+// HE master namespace
+/////////////////////////////////////////////////////////////////////////////
+
 var HE = {
  module: function() {
     var modules = {};
@@ -11,6 +15,36 @@ var HE = {
     };
   }()
 };
+
+/////////////////////////////////////////////////////////////////////////////
+// TF Extensions
+/////////////////////////////////////////////////////////////////////////////
+
+(function(TF_Extensions) {
+
+  var TF_Public = HE.module('TF_Public');
+
+  Backbone.Router.prototype.render_view = function(view_name, callback) {
+    if (!TF_Public.views[view_name]) { console.log(view_name + " view not defined"); return; }
+
+    if (TF_Public.currentView !== TF_Public.views[view_name]) {
+        TF_Public.currentView = TF_Public.views[view_name];
+        $('#main').empty().append(TF_Public.currentView.el);
+    }
+    
+    if (!TF_Public.currentView.model) {
+      callback.call(this);
+    } else {
+      callback.call(this, TF_Public.currentView.model);
+    }
+  };
+    
+})(HE.module("TF_Extensions"));
+
+
+/////////////////////////////////////////////////////////////////////////////
+// TF Core
+/////////////////////////////////////////////////////////////////////////////
 
 (function(TF_Core) {
 
@@ -31,32 +65,20 @@ var HE = {
 
 })(HE.module("TF_Core"));
 
+/////////////////////////////////////////////////////////////////////////////
+// TF Public
+/////////////////////////////////////////////////////////////////////////////
+
 (function(TF_Public) {
 
   var TF_Core = HE.module("TF_Core");
 
+  // URL Routing
   var TF_Router = Backbone.Router.extend({
       routes: {
         "user/:username":        "user",
         "search/:query":         "search",
         "*actions":              "home"
-      },
-
-      render_view: function(view_name, callback) {
-          if (!TF_Public.views[view_name]) {
-              console.log(view_name + " view not defined");
-              return;
-          }
-          
-          if (TF_Public.currentView !== TF_Public.views[view_name]) {
-              TF_Public.currentView = TF_Public.views[view_name];
-              $('#main').empty().append(TF_Public.currentView.el);
-          }
-          if (!TF_Public.currentView.model) {
-              callback.call(this);
-          } else {
-              callback.call(this, TF_Public.currentView.model);
-          }
       },
 
       search: function(query) {
@@ -78,12 +100,13 @@ var HE = {
       }
   });
 
+  // Master Layout Display
   var LayoutView = Backbone.View.extend({
 
     el : $('header'),
 
-    _search_input : 'input[name="q"]',
-    _search_button : 'button',
+    search_input : 'input[name="q"]',
+    search_button : 'button',
 
     events: {
       'onSearch': "search"
@@ -98,13 +121,13 @@ var HE = {
 
         $(this.el).append($('#template-header').tmpl());
 
-        this.$(this._search_input).keydown(_.bind(function (e) {
+        this.$(this.search_input).keydown(_.bind(function (e) {
             if (e.keyCode == 13) {
                 $(this.el).trigger('onSearch');
             }
         }, this));
 
-        this.$(this._search_button).click(_.bind(function () {
+        this.$(this.search_button).click(_.bind(function () {
             $(this.el).trigger('onSearch');
         }, this));
 
@@ -112,12 +135,13 @@ var HE = {
     },
 
     search: function() {
-        var route = "search/" + encodeURIComponent(this.$(this._search_input).val());
+        var route = "search/" + encodeURIComponent(this.$(this.search_input).val());
         TF_Public.router.navigate(route, true);
     }
 
   });
 
+  // Display a Tweet Stream
   var StreamView = Backbone.View.extend({
 
     id : 'search-view-page',
@@ -149,12 +173,17 @@ var HE = {
 
   });
 
+  // Initialize
   TF_Public.router = new TF_Router;
   TF_Public.views.layoutView = new LayoutView();
   TF_Public.views.searchView = new StreamView({model: TF_Core.models.search});
   TF_Public.views.userView = new StreamView({model: TF_Core.models.user});
 
 })(HE.module("TF_Public"));
+
+/////////////////////////////////////////////////////////////////////////////
+// Bootstrap
+/////////////////////////////////////////////////////////////////////////////
 
 $(document).ready( function () {
    Backbone.history.start({pushState: true});
