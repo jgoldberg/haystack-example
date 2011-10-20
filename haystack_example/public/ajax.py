@@ -14,9 +14,9 @@ def ajax_get_user(request, username):
 
 def ajax_search(request, query):
     if query == "":
-        results = SearchQuerySet().all().order_by('-created_date')[:5]
+        results = SearchQuerySet().all().order_by('-created_date')
     else:
-        results = SearchQuerySet().filter(text=query).order_by('-created_date')[:5]
+        results = SearchQuerySet().filter(text=query).order_by('-created_date')
 
     tweets = map(lambda _pk : Tweet.objects.get(pk=_pk).to_dict(), [tweet.pk for tweet in results])
 

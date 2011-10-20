@@ -62,7 +62,7 @@ var HE = {
       search: function(query) {
           this.render_view('searchView', function (model) {
               model.set({'query': query}, {silent: true});
-              model.fetch();
+              model.fetch();console.log(this);
           });
       },
 
@@ -98,18 +98,15 @@ var HE = {
 
         $(this.el).append($('#template-header').tmpl());
 
-        // Custom Events
-        var self = this;
-
-        this.$(this._search_input).keydown(function (e) {
+        this.$(this._search_input).keydown(_.bind(function (e) {
             if (e.keyCode == 13) {
-                $(self.el).trigger('onSearch');
+                $(this.el).trigger('onSearch');
             }
-        });
+        }, this));
 
-        this.$(this._search_button).click(function () {
-            $(self.el).trigger('onSearch');
-        });
+        this.$(this._search_button).click(_.bind(function () {
+            $(this.el).trigger('onSearch');
+        }, this));
 
         return this;
     },
@@ -138,12 +135,13 @@ var HE = {
 
         var tweets = this.model.get('tweets');
         for (var i=0; i<tweets.length; i++) {
-            var tweet = tweets[i];
-            
-            this.$('.stream').append($('#template-item-tweet').tmpl({
-                message: tweet.msg,
-                options: tweet.created_by
-            }));
+            _.defer(_.bind(function (i) {
+                var tweet = tweets[i];
+                this.$('.stream').append($('#template-item-tweet').tmpl({
+                    message: tweet.msg,
+                    options: tweet.created_by
+                }));
+            }, this, i));
         }
 
         return this;
