@@ -12,6 +12,7 @@ class TweetIndex(BaseSearch):
     message = indexes.CharField(model_attr='message')
     author = indexes.CharField(model_attr='created_by')
     created_date = indexes.DateField(model_attr='created_date')
+    created_date = indexes.CharField(model_attr='tweet_id')
 
     def index_queryset(self):
         return Tweet.objects.all()
