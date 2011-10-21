@@ -56,13 +56,13 @@
             ${ message }
         </div>
         <div class="tweet-options">
-            ${ options }
+            <a class="link link-user" data-username="${author}" href="/user/${ author }">${ author }</a>
         </div>
     </div>
   </script>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+  <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/libs/jquery-1.6.2.js"><\/script>')</script>
   <script src="{{ STATIC_URL }}js/libs/jquery.tmpl.js"></script>
   <script src="{{ STATIC_URL }}js/libs/underscore.js"></script>
   <script src="{{ STATIC_URL }}js/libs/json2.js"></script>

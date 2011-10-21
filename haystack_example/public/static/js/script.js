@@ -23,6 +23,7 @@ var HE = {
 (function(TF_Extensions) {
 
   var TF_Public = HE.module('TF_Public');
+  var TF_Core = HE.module('TF_Core');
 
   Backbone.Router.prototype.render_view = function(view_name, callback) {
     if (!TF_Public.views[view_name]) { console.log(view_name + " view not defined"); return; }
@@ -37,6 +38,20 @@ var HE = {
     } else {
       callback.call(this, TF_Public.currentView.model);
     }
+  };
+
+  TF_Public.init_router = function(clazz) {
+    TF_Public.router = new clazz;
+  }
+
+  TF_Public.init_view = function(view_name, clazz, options) {
+    options = options || {};
+    TF_Public.views[view_name] = new clazz(options);
+  };
+
+  TF_Core.init_model = function(model_name, clazz, options) {
+    options = options || {};
+    TF_Core.models[model_name] = new clazz(options);
   };
     
 })(HE.module("TF_Extensions"));
@@ -60,8 +75,8 @@ var HE = {
     urlRoot : '/ajax/search/'
   });
 
-  TF_Core.models.user = new UserModel();
-  TF_Core.models.search = new SearchModel();
+  TF_Core.init_model('user', UserModel);
+  TF_Core.init_model('search', SearchModel);
 
 })(HE.module("TF_Core"));
 
@@ -76,27 +91,30 @@ var HE = {
   // URL Routing
   var TF_Router = Backbone.Router.extend({
       routes: {
-        "user/:username":        "user",
-        "search/:query":         "search",
-        "*actions":              "home"
+        "user/:username":        "page_user",
+        "search/:query":         "page_search",
+        "*actions":              "page_home"
       },
 
-      search: function(query) {
+      page_search: function(query) {
           this.render_view('searchView', function (model) {
               model.set({'query': query}, {silent: true});
-              model.fetch();console.log(this);
+              model.fetch();
           });
       },
 
-      user: function(username) {
+      page_user: function(username) {
           this.render_view('userView', function (model) {
               model.set({'username': username}, {silent: true});
               model.fetch();
           });
       },
 
-      home: function () {
-          this.navigate("user/jbieber", true);
+      page_home: function () {
+          this.render_view('homeView', function (model) {
+              model.set({'query': ""}, {silent: true});
+              model.fetch();
+          });
       }
   });
 
@@ -109,7 +127,7 @@ var HE = {
     search_button : 'button',
 
     events: {
-      'onSearch': "search"
+      'search': "onSearch"
     },
 
     initialize: function () {
@@ -117,26 +135,27 @@ var HE = {
     },
 
     render: function() {
+        console.log("Rendering Layout");
         $(this.el).empty();
 
         $(this.el).append($('#template-header').tmpl());
 
         this.$(this.search_input).keydown(_.bind(function (e) {
             if (e.keyCode == 13) {
-                $(this.el).trigger('onSearch');
+                $(this.el).trigger('search');
             }
         }, this));
 
         this.$(this.search_button).click(_.bind(function () {
-            $(this.el).trigger('onSearch');
+            $(this.el).trigger('search');
         }, this));
 
         return this;
     },
 
-    search: function() {
-        var route = "search/" + encodeURIComponent(this.$(this.search_input).val());
-        TF_Public.router.navigate(route, true);
+    onSearch: function() {
+        var query = encodeURIComponent(this.$(this.search_input).val());
+        TF_Public.router.navigate("search/" + query, true);
     }
 
   });
@@ -146,13 +165,16 @@ var HE = {
 
     id : 'search-view-page',
 
-    events: {},
+    events: {
+        'click a.link-user': "onChangeUser"
+    },
 
     initialize: function () {
         this.model.bind('change', this.render, this);
     },
 
     render: function() {
+        console.log("Render");
         $(this.el).empty();
 
         $(this.el).append($('#template-stream-page').tmpl());
@@ -163,21 +185,29 @@ var HE = {
                 var tweet = tweets[i];
                 this.$('.stream').append($('#template-item-tweet').tmpl({
                     message: tweet.msg,
-                    options: tweet.created_by
+                    author: tweet.created_by
                 }));
             }, this, i));
         }
 
-        return this;
+        //this.delegateEvents();
+    },
+
+    onChangeUser: function (e) {
+        e.preventDefault();
+        var username = e.currentTarget.dataset['username'];
+        TF_Public.router.navigate("user/" + username, true);
     }
 
   });
 
   // Initialize
-  TF_Public.router = new TF_Router;
-  TF_Public.views.layoutView = new LayoutView();
-  TF_Public.views.searchView = new StreamView({model: TF_Core.models.search});
-  TF_Public.views.userView = new StreamView({model: TF_Core.models.user});
+  TF_Public.init_router(TF_Router);
+
+  TF_Public.init_view('layoutView', LayoutView);
+  TF_Public.init_view('searchView', StreamView, {model: TF_Core.models.search});
+  TF_Public.init_view('userView', StreamView, {model: TF_Core.models.user});
+  TF_Public.init_view('homeView', StreamView, {model: TF_Core.models.search});
 
 })(HE.module("TF_Public"));
 
@@ -186,5 +216,5 @@ var HE = {
 /////////////////////////////////////////////////////////////////////////////
 
 $(document).ready( function () {
-   Backbone.history.start({pushState: true});
+   Backbone.history.start();
 });
