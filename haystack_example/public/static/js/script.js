@@ -195,7 +195,7 @@ var HE = {
 
     onChangeUser: function (e) {
         e.preventDefault();
-        var username = e.currentTarget.dataset['username'];
+        var username = $(e.currentTarget).data('username');
         TF_Public.router.navigate("user/" + username, true);
     }
 
@@ -216,5 +216,5 @@ var HE = {
 /////////////////////////////////////////////////////////////////////////////
 
 $(document).ready( function () {
-   Backbone.history.start();
+   Backbone.history.start({pushState:true});
 });
