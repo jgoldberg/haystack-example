@@ -12,6 +12,8 @@
   <meta name="author" content="">
 
   <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+  <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
 
   <!-- CSS concatenated and minified via ant build script-->
   <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
@@ -24,14 +26,15 @@
 
   <div id="container">
     <header>
-
     </header>
-    <div id="main" role="main">
-        <div id="main-content">
-        </div>
-    </div>
-    <footer>
 
+    <div id="main" role="main">
+    </div>
+
+    <div id="sidebar">
+    </div>
+
+    <footer>
     </footer>
   </div> <!--! end of #container -->
 
@@ -42,10 +45,15 @@
     </div>
   </script>
 
- <script id="template-stream-page" type="text/x-jquery-tmpl">
+  <script id="template-trending-block" type="text/x-jquery-tmpl">
+      <ul class="trending">
+      </ul>
+  </script>
+
+  <script id="template-stream-page" type="text/x-jquery-tmpl">
     <div class="stream">
     </div>
- </script>
+  </script>
 
   <script id="template-item-tweet" type="text/x-jquery-tmpl">
     <div class="tweet">
@@ -59,6 +67,10 @@
             <a class="link link-user" data-username="${author}" href="/user/${ author }">${ author }</a>
         </div>
     </div>
+  </script>
+
+  <script id="template-item-trend" type="text/x-jquery-tmpl">
+    <li><a class="link link-trend" data-trend="${trend}" href="/search/${ trend }">${ trend }</a></li>
   </script>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>

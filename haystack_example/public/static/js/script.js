@@ -75,8 +75,14 @@ var HE = {
     urlRoot : '/ajax/search/'
   });
 
+  var TrendModel = Backbone.Model.extend({
+    defaults: {},
+    urlRoot : '/ajax/trending'
+  });
+
   TF_Core.init_model('user', UserModel);
   TF_Core.init_model('search', SearchModel);
+  TF_Core.init_model('trends', TrendModel);
 
 })(HE.module("TF_Core"));
 
@@ -121,24 +127,26 @@ var HE = {
   // Master Layout Display
   var LayoutView = Backbone.View.extend({
 
-    el : $('header'),
+    el : $('#container'),
 
-    search_input : 'input[name="q"]',
-    search_button : 'button',
+    search_input : 'header input[name="q"]',
+    search_button : 'header button',
 
     events: {
       'search': "onSearch"
     },
 
     initialize: function () {
-        this.render();
+        
     },
 
     render: function() {
         console.log("Rendering Layout");
-        $(this.el).empty();
 
-        $(this.el).append($('#template-header').tmpl());
+        // Header
+        this.$('header').empty();
+
+        this.$('header').append($('#template-header').tmpl());
 
         this.$(this.search_input).keydown(_.bind(function (e) {
             if (e.keyCode == 13) {
@@ -149,6 +157,13 @@ var HE = {
         this.$(this.search_button).click(_.bind(function () {
             $(this.el).trigger('search');
         }, this));
+
+        // Sidebar
+
+        this.$('#sidebar').empty();
+        
+        this.$('#sidebar').append(TF_Public.views.trendView.el);
+        TF_Core.models.trends.fetch()
 
         return this;
     },
@@ -174,7 +189,6 @@ var HE = {
     },
 
     render: function() {
-        console.log("Render");
         $(this.el).empty();
 
         $(this.el).append($('#template-stream-page').tmpl());
@@ -190,7 +204,7 @@ var HE = {
             }, this, i));
         }
 
-        //this.delegateEvents();
+        this.delegateEvents();
     },
 
     onChangeUser: function (e) {
@@ -201,13 +215,58 @@ var HE = {
 
   });
 
+    // Display Trending Hashtags
+  var TrendingView = Backbone.View.extend({
+
+    id : 'trending-block',
+    className : 'trending-block block',
+
+    events: {
+        'click a.link-trend': "onSelectTrend"
+    },
+
+    initialize: function () {
+        this.model.bind('change', this.render, this);
+    },
+
+    render: function() {
+        console.log('x');
+        $(this.el).empty();
+
+        $(this.el).append($('#template-trending-block').tmpl());
+
+        var trends = this.model.get('trends');
+        for (var i=0; i<trends.length; i+=2) {
+            _.defer(_.bind(function (i) {
+                var trend = trends[i];
+                this.$('.trending').append($('#template-item-trend').tmpl({
+                    trend: trend,
+                }));
+            }, this, i));
+        }
+
+        this.delegateEvents();
+    },
+
+    onSelectTrend: function (e) {
+        e.preventDefault();
+        var query = $(e.currentTarget).data('trend');
+        TF_Public.router.navigate("search/" + query, true);
+    }
+
+  });
+
   // Initialize
   TF_Public.init_router(TF_Router);
 
   TF_Public.init_view('layoutView', LayoutView);
+
+  TF_Public.init_view('trendView', TrendingView, {model: TF_Core.models.trends});
   TF_Public.init_view('searchView', StreamView, {model: TF_Core.models.search});
   TF_Public.init_view('userView', StreamView, {model: TF_Core.models.user});
   TF_Public.init_view('homeView', StreamView, {model: TF_Core.models.search});
+
+  TF_Public.views.layoutView.render();
 
 })(HE.module("TF_Public"));
 
@@ -216,5 +275,5 @@ var HE = {
 /////////////////////////////////////////////////////////////////////////////
 
 $(document).ready( function () {
-   Backbone.history.start({pushState:true});
+    Backbone.history.start({pushState:true});
 });
