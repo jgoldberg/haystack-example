@@ -127,7 +127,7 @@ var HE = {
   // Master Layout Display
   var LayoutView = Backbone.View.extend({
 
-    el : $('#container'),
+    el : $('body'),
 
     search_input : 'header input[name="q"]',
     search_button : 'header button',
@@ -240,7 +240,8 @@ var HE = {
             _.defer(_.bind(function (i) {
                 var trend = trends[i];
                 this.$('.trending').append($('#template-item-trend').tmpl({
-                    trend: trend,
+                    trend: encodeURIComponent(trend),
+                    trend_label: trend
                 }));
             }, this, i));
         }
