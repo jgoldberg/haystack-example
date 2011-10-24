@@ -150,19 +150,19 @@ footer { border: 0; }
 }
 
 .sidebar .block {
-background-image: linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
-background-image: -o-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
-background-image: -moz-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
-background-image: -webkit-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
-background-image: -ms-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+    background-image: linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+    background-image: -o-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+    background-image: -moz-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+    background-image: -webkit-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+    background-image: -ms-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
 
-background-image: -webkit-gradient(
-	linear,
-	left top,
-	left bottom,
-	color-stop(0, rgb(199,4,4)),
-	color-stop(1, rgb(105,1,1))
-);
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, rgb(199,4,4)),
+        color-stop(1, rgb(105,1,1))
+    );
 
     border-radius: 5px;
     -moz-border-radius: 5px;
