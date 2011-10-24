@@ -198,8 +198,9 @@ var HE = {
             _.defer(_.bind(function (i) {
                 var tweet = tweets[i];
                 this.$('.stream').append($('#template-item-tweet').tmpl({
-                    message: tweet.msg,
-                    author: tweet.created_by
+                    message: tweet.message,
+                    author: tweet.author,
+                    avatar_url: tweet.avatar_url
                 }));
             }, this, i));
         }

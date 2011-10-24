@@ -140,7 +140,7 @@ footer { border: 0; }
 .tweet .tweet-avatar { text-align: right; padding: 20px 0;}
 
 .sidebar {
-    margin-top: 50px;
+    margin-top: 53px;
     margin-left: 800px;
     font-size: 1.0em;
     padding: 5px;
@@ -150,22 +150,23 @@ footer { border: 0; }
 }
 
 .sidebar .block {
-    background-image: linear-gradient(bottom, rgb(255,160,5) 0%, rgb(255,222,5) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(255,160,5) 0%, rgb(255,222,5) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(255,160,5) 0%, rgb(255,222,5) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(255,160,5) 0%, rgb(255,222,5) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(255,160,5) 0%, rgb(255,222,5) 100%);
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0.0, rgb(255,160,5)),
-        color-stop(1, rgb(255,222,5))
-    );
+background-image: linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+background-image: -o-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+background-image: -moz-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+background-image: -webkit-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
+background-image: -ms-linear-gradient(top, rgb(199,4,4) 0%, rgb(105,1,1) 100%);
 
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, rgb(199,4,4)),
+	color-stop(1, rgb(105,1,1))
+);
+
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
     border: 1px solid #000000;
 }
 

@@ -17,18 +17,28 @@ solr_conn = Solr(settings.HAYSTACK_SOLR_URL, timeout=getattr(settings, 'HAYSTACK
 
 to_json = lambda data : serializers.serialize("json", data)
 
-def ajax_get_user(request, username):
-    user = get_object_or_404(TweetUser, username=username)
+def _search_result_to_dict(result):
+    return {
+        'message' : result.message,
+        'author' : result.author,
+        'avatar_url' : result.avatar_url,
+        'tweet_id' : result.tweet_id,
+    }
 
-    return HttpResponse(json.dumps(user.to_dict()))
+def ajax_get_user(request, username):
+    results = SearchQuerySet().filter(author=username).order_by('-tweet_id')
+
+    tweets = map(_search_result_to_dict, results)
+
+    return HttpResponse(json.dumps({ 'tweets' : tweets }))
 
 def ajax_search(request, query):
     if query == "":
         results = SearchQuerySet().all().order_by('-created_date')
     else:
-        results = SearchQuerySet().filter(text=query).order_by('-created_date')
+        results = SearchQuerySet().filter(text=query).order_by('-tweet_id')
 
-    tweets = map(lambda _pk : Tweet.objects.get(pk=_pk).to_dict(), [tweet.pk for tweet in results])
+    tweets = map(_search_result_to_dict, results)
 
     return HttpResponse(json.dumps({ 'tweets' : tweets }))
 
