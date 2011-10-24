@@ -38,10 +38,12 @@ class Command(BaseCommand):
                 username = tweet[u'from_user']
                 text = tweet[u'text']
                 tweet_id = tweet[u'id']
+                profile_image_url = tweet[u'profile_image_url']
                 
                 if username not in users:
                     user = TweetUser()
                     user.username = username
+                    user.avatar_url = profile_image_url
                     user.save()
                     user_count = user_count + 1
                     users[username] = user
@@ -51,7 +53,7 @@ class Command(BaseCommand):
                 tweet = Tweet()
                 tweet.message = text
                 tweet.created_by = user
-                tweet.created_date = tweet_id
+                tweet.tweet_id = tweet_id
                 tweet.save()
 
                 tweet_count = tweet_count + 1

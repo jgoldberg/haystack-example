@@ -10,9 +10,9 @@ if HAYSTACK_USE_REALTIME_SEARCH:
 class TweetIndex(BaseSearch):
     text = indexes.CharField(document=True, use_template=True)
     message = indexes.CharField(model_attr='message')
-    author = indexes.CharField(model_attr='created_by')
-    created_date = indexes.DateField(model_attr='created_date')
-    created_date = indexes.CharField(model_attr='tweet_id')
+    author = indexes.CharField(model_attr='created_by__username')
+    tweet_id = indexes.CharField(model_attr='tweet_id')
+    avatar_url = indexes.CharField(model_attr='created_by__avatar_url')
 
     def index_queryset(self):
         return Tweet.objects.all()

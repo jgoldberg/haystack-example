@@ -5,9 +5,7 @@ DATETIME_FORMAT = "%m/%d/%Y %H:%M"
 
 class TweetUser(models.Model):
     username = models.CharField(max_length=200)
-    favorite_movie = models.CharField(max_length=200, null=True, blank=True)
-    quote = models.CharField(max_length=200, null=True, blank=True)
-    random_fact = models.CharField(max_length=200, null=True, blank=True)
+    avatar_url = models.URLField()
 
     def __str__(self):
         return self.username
@@ -15,8 +13,7 @@ class TweetUser(models.Model):
     def to_dict(self):
         return \
         {'username': self.username,
-         'favorite_movie': self.favorite_movie,
-         'random_fact': self.random_fact,
+         'avatar_url': self.avatar_url,
          'tweets' : [tweet.to_dict() for tweet in self.tweet_set.all()],
         }
 
