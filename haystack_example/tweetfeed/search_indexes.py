@@ -3,9 +3,7 @@ from haystack import site
 from haystack import indexes
 from models import Tweet
 
-BaseSearch = indexes.SearchIndex
-if HAYSTACK_USE_REALTIME_SEARCH:
-    BaseSearch = indexes.RealTimeSearchIndex
+BaseSearch = indexes.RealTimeSearchIndex if HAYSTACK_USE_REALTIME_SEARCH else indexes.SearchIndex
 
 class TweetIndex(BaseSearch):
     text = indexes.CharField(document=True, use_template=True)

@@ -43,6 +43,8 @@ def ajax_search(request, query):
     return HttpResponse(json.dumps({ 'tweets' : tweets }))
 
 def ajax_trending(request):
+    # Had to do a raw Solr query for this
+    # Everyone should +1 https://github.com/toastdriven/django-haystack/pull/360
     params = {
         'facet': 'on',
         'fl': '* score',

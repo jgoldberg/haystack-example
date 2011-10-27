@@ -86,19 +86,19 @@ footer { border: 0; }
 
 @-webkit-keyframes tweetFadeIn {
 	0% { opacity: 0; }
-	100% { opacity: .8;	}
+	100% { opacity: .9;	}
 }
 
 @-moz-keyframes tweetFadeIn {
 	0% { opacity: 0; }
-	100% { opacity: .8;	}
+	100% { opacity: .9;	}
 }
 
 .tweet {
     margin-bottom: 50px;
     width: 750px;
     padding: 10px;
-    opacity: .8;
+    opacity: .9;
 
     background-image: linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%);
     background-image: -o-linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%);
@@ -145,7 +145,7 @@ footer { border: 0; }
     font-size: 1.0em;
     padding: 5px;
     height: 210px;
-    width: 200px;
+    width: 260px;
     position: fixed;
 }
 
@@ -168,9 +168,12 @@ footer { border: 0; }
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border: 1px solid #000000;
+
+    font-size: 1.6em;
 }
 
-ul.trending { list-style-type: none; }
+.trending { list-style-type: none; }
+.trending li { padding-bottom: 10px;}
 
 a, a:hover, a:active, a:visited { color: #7cfc00; }
 .link-user:before { content: '@';}
