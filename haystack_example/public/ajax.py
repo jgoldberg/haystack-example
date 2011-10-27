@@ -49,7 +49,7 @@ def ajax_trending(request):
         'facet': 'on',
         'fl': '* score',
         'start': '0',
-        'facet.field': 'message',
+        'facet.field': 'text',
         'wt': 'json',
         'fq': 'django_ct:(tweetfeed.tweet)',
         'facet.prefix': '#',
@@ -59,7 +59,7 @@ def ajax_trending(request):
     }
     try:
         result = solr_conn.search('*:*', **params)
-        facets = result.facets['facet_fields']['message']
+        facets = result.facets['facet_fields']['text']
     except (IOError, SolrError), e:
         facets = []
 

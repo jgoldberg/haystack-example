@@ -1,2 +1,2 @@
-{{ object.message }}
-{{ object.created_by }}
+{{ object.message|lower }}
+{{ object.created_by|lower }}
