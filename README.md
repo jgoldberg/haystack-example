@@ -1,3 +1,7 @@
+This is a demo application demonstrating how to use Haystack with Django and Solr.
+
+The technology stack is: Backbone.js, boostrap.js, Django, Solr, Haystack, sqlite
+
 ## Install
 
 ### Setup Django Environment
@@ -12,7 +16,7 @@ pip install django-haystack
 
 pip install pysolr
 
-git clone https://jgoldberg@github.com/jgoldberg/haystack-example.git haystack-example
+git clone git://github.com/jgoldberg/haystack-example.git haystack-example
 
 ### Create Database
 
@@ -30,7 +34,7 @@ brew install solr
 
 cd haystack-example/conf/solr
 
-solr `pwd`
+solr \`pwd\`
 
 ### Index Database
 
@@ -40,4 +44,4 @@ python manage.py rebuild_index
 
 python manage.py runserver
 
-http://localhost:8000/
+Visit: http://localhost:8000/
