@@ -86,19 +86,19 @@ footer { border: 0; }
 
 @-webkit-keyframes tweetFadeIn {
 	0% { opacity: 0; }
-	100% { opacity: .9;	}
+	100% { opacity: .8;	}
 }
 
 @-moz-keyframes tweetFadeIn {
 	0% { opacity: 0; }
-	100% { opacity: .9;	}
+	100% { opacity: .8;	}
 }
 
 .tweet {
     margin-bottom: 50px;
     width: 750px;
     padding: 10px;
-    opacity: .9;
+    opacity: .8;
 
     background-image: linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%);
     background-image: -o-linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%);
